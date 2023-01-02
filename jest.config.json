@@ -1,0 +1,8 @@
+{
+	"preset": "ts-jest",
+	"testEnvironment": "node",
+	"modulePathIgnorePatterns": ["build"],
+	"verbose": true,
+	"globalSetup": "<rootDir>/__test__/config/setup.ts",
+	"globalTeardown": "<rootDir>/__test__/config/teardown.ts"
+}
