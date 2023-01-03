@@ -1,7 +1,7 @@
 import supertest, { SuperTest, Test } from 'supertest';
 
 import env from '../../.env/test.json';
-import app from '../../src/server';
+import server from '../../src/server';
 
 for (const [key, value] of Object.entries(env as Record<string, string>))
 	process.env[key] = value;
@@ -12,7 +12,7 @@ interface iRequestOptions {
 }
 
 export class Request {
-	private _request: SuperTest<Test> = supertest(app);
+	private _request: SuperTest<Test> = supertest(server);
 
 	constructor() {}
 
