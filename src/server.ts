@@ -3,7 +3,6 @@ import { createServer } from 'http';
 import app from './app';
 import * as DEV_ENV from '../.env/development.json';
 import * as PROD_ENV from '../.env/production.json';
-import * as TEST_ENV from '../.env/test.json';
 import { logger } from './lib/logger';
 import { dBInit } from './infrastructure';
 
@@ -15,9 +14,6 @@ switch (process.env.NODE_ENV) {
 		break;
 	case 'development':
 		env = DEV_ENV;
-		break;
-	case 'test':
-		env = TEST_ENV;
 		break;
 	default:
 		env = PROD_ENV;
@@ -35,5 +31,3 @@ server.listen(port);
 server.on('listening', () => {
 	logger.info(`SERVER INITIALISATION::Running on port ${port}`);
 });
-
-export default server;

@@ -4,5 +4,6 @@
 	"modulePathIgnorePatterns": ["build"],
 	"verbose": true,
 	"globalSetup": "<rootDir>/__test__/config/setup.ts",
-	"globalTeardown": "<rootDir>/__test__/config/teardown.ts"
+	"globalTeardown": "<rootDir>/__test__/config/teardown.ts",
+	"setupFilesAfterEnv": ["<rootDir>/__test__/config/setupFilesAfterEnv.ts"]
 }

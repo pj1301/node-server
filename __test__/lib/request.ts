@@ -1,7 +1,7 @@
 import supertest, { SuperTest, Test } from 'supertest';
 
 import env from '../../.env/test.json';
-import server from '../../src/server';
+import expressServer from '../config/server';
 
 for (const [key, value] of Object.entries(env as Record<string, string>))
 	process.env[key] = value;
@@ -12,7 +12,7 @@ interface iRequestOptions {
 }
 
 export class Request {
-	private _request: SuperTest<Test> = supertest(server);
+	private _request: SuperTest<Test> = supertest(expressServer.server);
 
 	constructor() {}
 
@@ -20,8 +20,6 @@ export class Request {
 		const r = this._request.get(this.formatUrl(url));
 
 		options.headers && this.addHeaders(r, options.headers);
-
-		console.log(r.url);
 
 		return r.send();
 	}
@@ -55,6 +53,7 @@ export class Request {
 	}
 
 	private formatUrl(url: string): string {
-		return url.slice(0, 1) !== '/' ? `/${url}` : url;
+		let prefix = '/api/v1/';
+		return url.slice(0, 1) === '/' ? prefix + url.slice(1) : prefix + url;
 	}
 }
