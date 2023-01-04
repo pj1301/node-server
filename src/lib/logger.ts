@@ -20,9 +20,12 @@ const logger: Logger = createLogger({
 		new transports.Console({
 			level,
 			format: combine(colorize(), format.printf(printLog)),
-			silent: false,
-		}),
-	],
+			silent:
+				process.env.NODE_ENV === 'test' && process.argv.includes('--silent')
+					? true
+					: false
+		})
+	]
 });
 
 logger.info(
