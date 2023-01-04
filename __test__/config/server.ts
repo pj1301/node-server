@@ -9,14 +9,6 @@ class ExpressServer {
 	private _server!: Server;
 
 	constructor() {
-		this.init();
-	}
-
-	public get server(): Server {
-		return this._server;
-	}
-
-	public init(): void {
 		for (const [key, value] of Object.entries(env as Record<string, string>))
 			process.env[key] = value;
 
@@ -31,6 +23,10 @@ class ExpressServer {
 			logger.error('ERROR IN STARTING TEST SERVER');
 			logger.error(e);
 		}
+	}
+
+	public get server(): Server {
+		return this._server;
 	}
 
 	public close(): void {
