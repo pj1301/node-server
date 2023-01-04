@@ -27,9 +27,7 @@ async function getUsers(
 	const { query } = req;
 	let users;
 	try {
-		users = await User.find(formatQuery(query))
-			.select('-password')
-			.populate('tags', 'title type');
+		users = await User.find(formatQuery(query)).select('-password');
 	} catch (e) {
 		return next(e);
 	}
@@ -46,9 +44,7 @@ async function getUserById(
 	const { id } = req.params;
 	let user;
 	try {
-		user = await User.findById(id)
-			.select('-password')
-			.populate('tags', 'title type');
+		user = await User.findById(id).select('-password');
 	} catch (e) {
 		return next(e);
 	}
@@ -64,20 +60,18 @@ async function updateUser(
 ): Promise<void> {
 	const { id } = req.params;
 	// eslint-disable-next-line prefer-const
-	let { firstName, lastName, username, role, active, tags } = req.body;
+	let { firstName, lastName, username, role, active } = req.body;
 	const update: {
 		username?: string;
 		lastName?: string;
 		firstName?: string;
 		role?: string;
 		active?: boolean;
-		tags?: Array<string>;
 	} = {};
 	if (firstName) update['firstName'] = firstName;
 	if (lastName) update.lastName = lastName;
 	if (username) update.username = username;
 	if (role) update.role = role;
-	if (tags) update.tags = tags;
 	if (active || active === false) update.active = active;
 	let user;
 
@@ -86,7 +80,7 @@ async function updateUser(
 			{ _id: new ObjectId(id) },
 			{ $set: update },
 			{ new: true }
-		).populate('tags', 'title type');
+		);
 	} catch (e) {
 		return next(e);
 	}
@@ -170,5 +164,5 @@ export {
 	updateUser,
 	getLoggedInUser,
 	getPasswordResetLink,
-	performPasswordReset,
+	performPasswordReset
 };

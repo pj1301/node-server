@@ -22,5 +22,5 @@ export async function validateToken(
 		throw new EnvironmentError(
 			'Environment variables are missing JWT defaults'
 		);
-	return await verify(token, process.env.JET_SECRET as string);
+	return await verify(token, process.env.JWT_SECRET as string);
 }

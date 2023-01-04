@@ -1,5 +1,4 @@
 import { JwtPayload } from 'jsonwebtoken';
-import { ObjectId } from 'mongodb';
 import { model, Schema } from 'mongoose';
 
 import { generateToken, validateToken, compare } from '../../lib';
@@ -34,11 +33,6 @@ const userSchema = new Schema(
 			type: String,
 			default: 'standard',
 			enum: ['standard', 'manager', 'admin', 'developer']
-		},
-		tags: {
-			type: [ObjectId],
-			ref: 'Tag',
-			default: []
 		},
 		password: {
 			type: String

@@ -8,7 +8,6 @@ for (const [key, value] of Object.entries(env as Record<string, string>))
 
 interface iRequestOptions {
 	headers?: Record<string, any>;
-	cookie: Array<string>;
 }
 
 export class Request {
@@ -16,7 +15,7 @@ export class Request {
 
 	constructor() {}
 
-	public get(url: string, options: iRequestOptions) {
+	public get(url: string, options: iRequestOptions = {}) {
 		const r = this._request.get(this.formatUrl(url));
 
 		options.headers && this.addHeaders(r, options.headers);
@@ -24,7 +23,7 @@ export class Request {
 		return r.send();
 	}
 
-	public post(url: string, body: any, options: iRequestOptions) {
+	public post(url: string, body: any, options: iRequestOptions = {}) {
 		const r = this._request.post(this.formatUrl(url));
 
 		options.headers && this.addHeaders(r, options.headers);
@@ -32,7 +31,7 @@ export class Request {
 		return r.send(body);
 	}
 
-	public patch(url: string, body: any, options: iRequestOptions) {
+	public patch(url: string, body: any, options: iRequestOptions = {}) {
 		const r = this._request.patch(this.formatUrl(url));
 
 		options.headers && this.addHeaders(r, options.headers);
@@ -40,7 +39,7 @@ export class Request {
 		return r.send(body);
 	}
 
-	public delete(url: string, options: iRequestOptions) {
+	public delete(url: string, options: iRequestOptions = {}) {
 		const r = this._request.delete(this.formatUrl(url));
 
 		options.headers && this.addHeaders(r, options.headers);
@@ -48,7 +47,7 @@ export class Request {
 		return r.send();
 	}
 
-	private addHeaders(request: Test, headers: Record<string, any>) {
+	private addHeaders(request: Test, headers: Record<string, any> = {}) {
 		for (let [k, v] of Object.entries(headers)) request.set(k, v);
 	}
 

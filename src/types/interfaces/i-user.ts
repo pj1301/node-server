@@ -5,7 +5,6 @@ export interface iUser {
 	username: string;
 	role: string;
 	active: boolean;
-	tags: Array<string>;
 	firstName?: string;
 	lastName?: string;
 	_id?: ObjectId | string;
@@ -17,7 +16,6 @@ export interface iUserDocument extends Document {
 	username: string;
 	role: string;
 	active: boolean;
-	tags: Array<string>;
 	firstName?: string;
 	lastName?: string;
 	_id?: ObjectId | string;

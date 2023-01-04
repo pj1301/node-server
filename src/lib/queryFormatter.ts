@@ -5,11 +5,7 @@ const { ObjectId } = Types;
 export function formatQuery(query: Record<string, any>): Record<string, any> {
 	const final: Record<string, any> = {};
 
-	console.log({ query });
-
 	for (const [k, v] of Object.entries(query)) {
-		console.log({ k, v });
-
 		if (ObjectId.isValid(v)) {
 			final[k] = new ObjectId(v);
 		} else if (
@@ -18,7 +14,6 @@ export function formatQuery(query: Record<string, any>): Record<string, any> {
 		) {
 			final[k] = {};
 			const { start, end } = JSON.parse(v);
-			console.log({ start, end });
 			if (start) final[k]['$gte'] = new Date(start);
 			if (end) final[k]['$lte'] = new Date(end);
 		} else if (
