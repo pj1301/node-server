@@ -47,8 +47,6 @@ export class Request {
 
 		options.headers && this.addHeaders(r, options.headers);
 
-		console.log(r.url);
-
 		return r.send(body);
 	}
 

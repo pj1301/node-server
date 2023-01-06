@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { logger } from '../lib';
-import { NotAuthorised } from '../errors';
+import { Forbidden, NotAuthorised } from '../errors';
 import { iUser, User } from '../types';
 
 export async function authenticate(
@@ -22,13 +22,14 @@ export async function authenticate(
 		*/
 		user = await User.authenticate(cookie.replace(/token=/, ''));
 		if (!user) throw new Error('Not authorised');
-		if (!res.locals.allowedRoles.includes(user.role))
-			throw new Error('Not authorised');
 	} catch (e) {
-		logger.error('ERROR: Authentication Middleware');
-		logger.error(e);
+		// logger.error('ERROR: Authentication Middleware');
+		// logger.error(e);
 		return next(new NotAuthorised());
 	}
+
+	if (!res.locals.allowedRoles.includes(user.role))
+		return next(new Forbidden());
 
 	// set user in res.locals
 	res.locals.user = user;

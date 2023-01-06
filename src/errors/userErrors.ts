@@ -9,3 +9,13 @@ export class NotAuthorised implements iServerError {
 		this.message = message ?? 'Not authorised';
 	}
 }
+
+export class Forbidden implements iServerError {
+	public statusCode = 403;
+	public message: string;
+	public name = 'Forbidden';
+
+	constructor(message?: string) {
+		this.message = message ?? 'Forbidden';
+	}
+}

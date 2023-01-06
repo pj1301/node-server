@@ -1,4 +1,4 @@
-export * from './models/user.model';
+export * from './models';
 
 export * from './interfaces/i-authToken';
 export * from './interfaces/i-user';
