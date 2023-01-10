@@ -1,6 +1,6 @@
 import { Document, model, Schema, ObjectId } from 'mongoose';
 
-import { generateToken, validateToken } from 'lib';
+import { generateToken, validateToken } from '../../lib';
 import { eTokenType } from '../enums/tokenType.enum';
 import { iToken, iTokenDocument, iTokenModel } from '../interfaces/i-token';
 
@@ -11,9 +11,10 @@ const tokenSchema = new Schema(
 			required: true,
 			refPath: 'docModel'
 		},
-		token: { type: String, required: true },
-		type: { type: eTokenType, required: true },
-		docModel: { type: String, required: true, enum: ['User'] }
+		token: { type: String },
+		type: { type: String, enum: eTokenType, required: true },
+		docModel: { type: String, required: true, enum: ['User'] },
+		expireAt: { type: Date }
 	},
 	{
 		timestamps: {
@@ -24,17 +25,23 @@ const tokenSchema = new Schema(
 );
 
 tokenSchema.pre('save', function (next) {
+	let date = new Date();
 	let expiry: string | undefined;
 	switch (this.type) {
 		case eTokenType.AUTH as string:
 			expiry = '3d';
+			this.expireAt = new Date(date.setDate(date.getDate() + 3));
 			break;
 		case eTokenType.SINGLE_AUTH as string:
 			expiry = '5m';
+			this.expireAt = new Date(
+				date.setHours(date.getHours(), date.getMinutes() + 5)
+			);
 			break;
 	}
 
 	this.token = generateToken(this.identifier.toString(), { expiry });
+	next();
 });
 
 tokenSchema.statics.verify = async function (

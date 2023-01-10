@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 
 import { logger } from '../lib';
 import { Forbidden, NotAuthorised } from '../errors';
-import { iToken, Token } from '../types';
+import { Token } from '../types';
 
 export async function authenticate(
 	req: Request,
@@ -18,7 +18,7 @@ export async function authenticate(
 			? cookie.replace(/token=/, '')
 			: (authorization as string).replace(/Bearer /, '');
 
-		accessor = await Token.verify(token, res.locals.tokenAccess); // going to have to change the token processing...
+		accessor = await Token.verify(token, res.locals.tokenAccess);
 		if (!accessor) throw new Error('Not authorised');
 	} catch (e) {
 		// logger.error('ERROR: Authentication Middleware');
