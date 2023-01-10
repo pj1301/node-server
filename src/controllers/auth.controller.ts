@@ -15,14 +15,11 @@ async function login(
 		user = await User.login(username, password);
 		if (!user) throw Error('Not authenticated');
 
-		storedToken = (await Token.create(
-			{
-				identifier: user._id,
-				type: eTokenType.AUTH,
-				docModel: 'User'
-			},
-			{ new: true }
-		)) as unknown as iToken;
+		storedToken = (await Token.create({
+			identifier: user._id,
+			type: eTokenType.AUTH,
+			docModel: 'User'
+		})) as unknown as iToken;
 
 		if (!storedToken) throw new DatabaseError();
 	} catch (e) {

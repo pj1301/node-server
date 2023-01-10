@@ -9,7 +9,7 @@ beforeAll(() => {
 
 beforeEach(async () => {
 	await Promise.all(
-		Object.values(MODELS).map(<T>(m: Model<T>) => m.deleteMany({}))
+		Object.values(MODELS).map((m: Model<any>) => m.deleteMany({}))
 	);
 });
 

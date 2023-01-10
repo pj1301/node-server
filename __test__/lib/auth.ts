@@ -1,4 +1,11 @@
-import { iUser } from 'types';
+import { TestHelperError } from '../../src/errors';
+import {
+	eTokenType,
+	iDatabaseObject,
+	iToken,
+	iUser,
+	Token
+} from '../../src/types';
 
 const jwt = require('jsonwebtoken');
 
@@ -33,4 +40,24 @@ export function userCookie(
 			}
 		)}`
 	];
+}
+
+export async function createCookie(
+	accessor: iDatabaseObject,
+	docModel: string,
+	type: eTokenType = eTokenType.AUTH
+): Promise<string> {
+	let storedToken: iToken | null;
+
+	try {
+		storedToken = await Token.create({
+			identifier: accessor._id,
+			type,
+			docModel
+		});
+	} catch (e: unknown) {
+		throw new TestHelperError('createCookie function failed');
+	}
+
+	return `token=${storedToken?.token}`;
 }

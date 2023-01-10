@@ -1,10 +1,10 @@
 import { JwtPayload } from 'jsonwebtoken';
 import { model, Schema } from 'mongoose';
 
-import { generateToken, validateToken, compare } from '../../lib';
-import { iUser, iUserDocument, iUserModel } from '..';
+import { validateToken, compare } from '../../lib';
+import { iUser, iUserModel } from '..';
 
-const userSchema = new Schema(
+const userSchema = new Schema<iUser>(
 	{
 		firstName: {
 			type: String,
@@ -74,6 +74,6 @@ userSchema.statics.authenticate = async function (
 	return user;
 };
 
-const User = model<iUserDocument, iUserModel>('User', userSchema);
+const User = model<iUser, iUserModel>('User', userSchema);
 
 export { User };

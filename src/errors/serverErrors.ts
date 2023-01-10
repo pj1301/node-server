@@ -30,3 +30,13 @@ export class DatabaseError implements iServerError {
 		this.message = message ?? 'An error occurred during a database operation';
 	}
 }
+
+export class TestHelperError implements iServerError {
+	public statusCode = 500;
+	public message: string;
+	public name = 'TestHelper';
+
+	constructor(message?: string) {
+		this.message = message ?? 'An error occurred during a test helper function';
+	}
+}

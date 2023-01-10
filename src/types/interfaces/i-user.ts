@@ -11,11 +11,8 @@ export interface iUser extends iDatabaseObject {
 	password?: string;
 }
 
-// can declare schema methods here
-export interface iUserDocument extends Document<ObjectId, null, iUser> {}
-
 // can declare statics here
-export interface iUserModel extends Model<iUserDocument> {
+export interface iUserModel extends Model<iUser> {
 	login(email: string, password: string): Promise<iUser | null>;
 	authenticate(token: string): Promise<iUser | null>;
 }

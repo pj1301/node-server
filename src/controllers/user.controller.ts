@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 
 import { eTokenType, iToken, iUser, Token, User } from '../types';
-import { encrypt, formatQuery } from '../lib';
+import { encrypt, formatQuery, logger } from '../lib';
 
 async function createUser(
 	req: Request,
@@ -139,11 +139,20 @@ async function passwordResetRequest(
 	res: Response,
 	next: NextFunction
 ): Promise<void> {
-	let user: iUser | null;
+	let user: iUser | null,
+		storedToken: iToken | null = null;
 	try {
 		user = await User.findOne({ email: req.body.email });
-		// if user we need to send the email somehow
+
+		if (user) {
+			storedToken = (await Token.create({
+				identifier: user._id,
+				type: eTokenType.SINGLE_AUTH,
+				docModel: 'User'
+			})) as unknown as iToken;
+		}
 	} catch (e) {
+		logger.error(e);
 		return next(e);
 	}
 
@@ -161,7 +170,7 @@ async function performPasswordReset(
 	let result: boolean | null;
 	try {
 		result = await User.findOneAndUpdate(
-			{ _id: res.locals.user._id },
+			{ _id: res.locals.accessor._id },
 			{ password: encrypt(req.body.password) }
 		);
 	} catch (e) {

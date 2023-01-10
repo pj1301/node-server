@@ -2,9 +2,9 @@ import { Document, model, Schema, ObjectId } from 'mongoose';
 
 import { generateToken, validateToken } from '../../lib';
 import { eTokenType } from '../enums/tokenType.enum';
-import { iToken, iTokenDocument, iTokenModel } from '../interfaces/i-token';
+import { iToken, iTokenModel } from '../interfaces/i-token';
 
-const tokenSchema = new Schema(
+const tokenSchema = new Schema<iToken>(
 	{
 		identifier: {
 			type: Schema.Types.ObjectId,
@@ -78,6 +78,6 @@ tokenSchema.statics.verify = async function (
 	return accessor;
 };
 
-const Token = model<iTokenDocument, iTokenModel>('Token', tokenSchema);
+const Token = model<iToken, iTokenModel>('Token', tokenSchema);
 
 export { Token };
