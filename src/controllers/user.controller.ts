@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 
-import { User } from '../types';
-import { encrypt, generateToken, formatQuery } from '../lib';
+import { eTokenType, iToken, iUser, Token, User } from '../types';
+import { encrypt, formatQuery } from '../lib';
 
 async function createUser(
 	req: Request,
@@ -120,10 +120,14 @@ async function getPasswordResetLink(
 	try {
 		const user = await User.findById(req.params.id);
 		if (!user) return next(new Error('No user with specified id'));
-		url = `${process.env.URL}/password-reset#token=${generateToken(
-			user._id.toString(),
-			{ expiry: '5m' }
-		)}`;
+
+		const storedToken = (await Token.create({
+			identifier: user._id,
+			type: eTokenType.SINGLE_AUTH,
+			docModel: 'User'
+		})) as unknown as iToken;
+
+		url = `${process.env.URL}/password-reset#token=${storedToken.token}`;
 	} catch (e) {
 		return next(e);
 	}
@@ -135,7 +139,18 @@ async function passwordResetRequest(
 	res: Response,
 	next: NextFunction
 ): Promise<void> {
-	throw new Error('Not implemented');
+	let user: iUser | null;
+	try {
+		user = await User.findOne({ email: req.body.email });
+		// if user we need to send the email somehow
+	} catch (e) {
+		return next(e);
+	}
+
+	res.status(200).send({
+		message:
+			'A password reset link will be sent to the provided email address if an account exists'
+	});
 }
 
 async function performPasswordReset(

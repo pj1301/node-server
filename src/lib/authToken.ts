@@ -1,4 +1,4 @@
-import { EnvironmentError } from '../errors';
+import { EnvironmentError, ParameterError } from '../errors';
 import { JwtPayload, sign, verify } from 'jsonwebtoken';
 
 interface iTokenOptions {
@@ -10,6 +10,8 @@ export function generateToken(id: string, options: iTokenOptions = {}): string {
 		throw new EnvironmentError(
 			'Environment variables are missing JWT defaults'
 		);
+
+	if (!id) throw new ParameterError('User id is required');
 	return sign({ id }, process.env.JWT_SECRET as string, {
 		expiresIn: options.expiry ?? process.env.JWT_EXPIRY
 	});

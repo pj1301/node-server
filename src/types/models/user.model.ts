@@ -53,11 +53,15 @@ const userSchema = new Schema(
 userSchema.statics.login = async function (
 	username: string,
 	password: string
-): Promise<string | null | void> {
-	const user = await this.findOne({ $or: [{ email: username }, { username }] });
-	if (!user) return;
-	if (!compare(password, user.password)) return;
-	return generateToken(user._id.toString());
+): Promise<iUser | null> {
+	const user = await this.findOne({
+		$or: [{ email: username }, { username }]
+	});
+	if (!user) return null;
+
+	if (!compare(password, user.password as string)) return null;
+
+	return user;
 };
 
 userSchema.statics.authenticate = async function (

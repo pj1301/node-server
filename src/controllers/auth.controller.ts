@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { iUser, User } from '../types';
-import { NotAuthorised } from '../errors';
+import { eTokenType, iUser, User, Token, iToken } from '../types';
+import { DatabaseError, NotAuthorised } from '../errors';
 
 async function login(
 	req: Request,
@@ -9,20 +9,34 @@ async function login(
 	next: NextFunction
 ): Promise<void> {
 	const { username, password } = req.body;
-	let token: string | null, user: iUser | null;
+	let storedToken: iToken, user: iUser | null;
 
 	try {
-		token = await User.login(username, password);
-		if (!token) throw Error('Not authenticated');
-		user = await User.findOne({ username }).select('-password');
+		user = await User.login(username, password);
+		if (!user) throw Error('Not authenticated');
+
+		storedToken = (await Token.create(
+			{
+				identifier: user._id,
+				type: eTokenType.AUTH,
+				docModel: 'User'
+			},
+			{ new: true }
+		)) as unknown as iToken;
+
+		if (!storedToken) throw new DatabaseError();
 	} catch (e) {
 		next(new NotAuthorised((e as Error).message ?? 'Not authenticated'));
 		return;
 	}
 
 	res
+		.cookie('token', storedToken.token, {
+			maxAge: parseInt(process.env.MAX_COOKIE_AGE as string, 10),
+			httpOnly: true
+		})
 		.status(200)
-		.send({ message: 'Successfully logged in', data: { token, user } });
+		.send({ message: 'Successfully logged in', data: { user } });
 	return;
 }
 

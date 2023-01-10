@@ -64,3 +64,4 @@ export function middleware(server: Application): void {
 export * from './authenticate';
 export * from './errorHandler';
 export * from './roleBasedAccess';
+export * from './tokenAccess';
