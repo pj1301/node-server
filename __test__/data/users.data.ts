@@ -22,10 +22,19 @@ export const users = [
 	{
 		_id: ObjectId('63936292be586fb65205e37f'),
 		active: true,
-		firstName: 'Arnold',
-		lastName: 'Terminator',
-		email: 'willbeback@future.io',
+		firstName: 'Stan',
+		lastName: 'User',
+		email: 'standard@test.com',
 		role: 'standard',
-		username: 'killterminators'
+		username: 'standard1'
+	},
+	{
+		_id: ObjectId('63936292be586fb65205e37f'),
+		active: true,
+		firstName: 'Stania',
+		lastName: 'User',
+		email: 'standard2@test.com',
+		role: 'standard',
+		username: 'standard2'
 	}
 ];
