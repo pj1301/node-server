@@ -33,7 +33,7 @@ async function login(
 			httpOnly: true
 		})
 		.status(200)
-		.send({ message: 'Successfully logged in', data: { user } });
+		.send({ message: 'Successfully logged in', data: user });
 	return;
 }
 
@@ -42,7 +42,14 @@ async function logout(
 	res: Response,
 	next: NextFunction
 ): Promise<void> {
-	res.status(200).send({ message: 'logout' });
+	try {
+		await Token.deleteMany({ identifier: res.locals.accessor._id.toString() });
+	} catch (e: unknown) {
+		next(new NotAuthorised((e as Error).message ?? 'Not authenticated'));
+		return;
+	}
+
+	res.status(200).send({ message: 'Logout successful' });
 	return;
 }
 

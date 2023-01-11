@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 
 import { eTokenType, iToken, iUser, Token, User } from '../types';
-import { encrypt, formatQuery, logger } from '../lib';
+import { formatQuery, logger } from '../lib';
 
 async function createUser(
 	req: Request,
@@ -171,7 +171,7 @@ async function performPasswordReset(
 	try {
 		result = await User.findOneAndUpdate(
 			{ _id: res.locals.accessor._id },
-			{ password: encrypt(req.body.password) }
+			{ password: req.body.password }
 		);
 	} catch (e) {
 		return next(e);

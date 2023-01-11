@@ -74,6 +74,11 @@ tokenSchema.statics.verify = async function (
 		any
 	>;
 
+	// if token is single use - delete
+	if (storedToken.type === eTokenType.SINGLE_AUTH) {
+		await Token.deleteOne(storedToken);
+	}
+
 	// return the found record
 	return accessor;
 };

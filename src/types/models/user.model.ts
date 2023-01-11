@@ -1,8 +1,9 @@
 import { JwtPayload } from 'jsonwebtoken';
 import { model, Schema } from 'mongoose';
 
-import { validateToken, compare } from '../../lib';
+import { validateToken, compare, encrypt } from '../../lib';
 import { iUser, iUserModel } from '..';
+import { NextFunction } from 'express';
 
 const userSchema = new Schema<iUser>(
 	{
@@ -49,6 +50,17 @@ const userSchema = new Schema<iUser>(
 		}
 	}
 );
+
+userSchema.pre('save', function (next) {
+	if (this.password) this.password = encrypt(this.password);
+	next();
+});
+
+userSchema.pre('findOneAndUpdate', function (next) {
+	const passCheck = (this.getUpdate() as iUser).password;
+	if (passCheck) (this.getUpdate() as iUser).password = encrypt(passCheck);
+	next();
+});
 
 userSchema.statics.login = async function (
 	username: string,
