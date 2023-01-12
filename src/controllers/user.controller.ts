@@ -60,17 +60,19 @@ async function updateUser(
 ): Promise<void> {
 	const { id } = req.params;
 	// eslint-disable-next-line prefer-const
-	let { firstName, lastName, username, role, active } = req.body;
+	let { firstName, lastName, username, email, role, active } = req.body;
 	const update: {
 		username?: string;
 		lastName?: string;
 		firstName?: string;
+		email?: string;
 		role?: string;
 		active?: boolean;
 	} = {};
 	if (firstName) update['firstName'] = firstName;
 	if (lastName) update.lastName = lastName;
 	if (username) update.username = username;
+	if (email) update.email = email;
 	if (role) update.role = role;
 	if (active || active === false) update.active = active;
 	let user;
@@ -86,7 +88,7 @@ async function updateUser(
 	}
 	res
 		.status(200)
-		.send({ message: `A user queried by id => ${id}`, data: user });
+		.send({ message: `Updated user with id => ${id}`, data: user });
 }
 
 async function deleteUser(
@@ -107,8 +109,10 @@ async function getLoggedInUser(
 	res: Response,
 	next: NextFunction
 ): Promise<void> {
-	if (!res.locals.user) throw new Error('User not found');
-	res.status(200).send({ message: 'Logged in user', data: res.locals.user });
+	if (!res.locals.accessor) throw new Error('User not found');
+	res
+		.status(200)
+		.send({ message: 'Logged in user', data: res.locals.accessor });
 }
 
 async function getPasswordResetLink(

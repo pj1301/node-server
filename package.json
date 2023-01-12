@@ -5,7 +5,7 @@
 	"main": "src/server.ts",
 	"scripts": {
 		"test:summary": "NODE_ENV=test npx jest --runInBand --detectOpenHandles --verbose=false --silent",
-		"test": "NODE_ENV=test npx jest --runInBand --detectOpenHandles",
+		"test": "NODE_ENV=test npx jest --runInBand --detectOpenHandles --verbose --silent",
 		"test:api": "NODE_ENV=test npx jest --runInBand --detectOpenHandles --verbose -- api.spec",
 		"test:unit": "NODE_ENV=test npx jest --runInBand --detectOpenHandles --verbose -- api.unit",
 		"dev": "NODE_ENV=development nodemon ./src/server.ts",

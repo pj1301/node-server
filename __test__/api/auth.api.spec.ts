@@ -1,6 +1,6 @@
-import { Request, createCookie } from '../lib';
+import { Request, createCookie, userToken } from '../lib';
 import { users } from '../data';
-import { User, Token } from '../../src/types';
+import { User, Token, eTokenType } from '../../src/types';
 
 const http = new Request();
 
@@ -65,5 +65,49 @@ describe('Login', () => {
 
 		const storedTokens = await Token.find();
 		expect(storedTokens).toHaveLength(0);
+	});
+});
+
+/*
+CHECK TOKEN TYPES
+If using a single use token - fail except
+for password reset and check token is removed
+If using a regular auth token but submitted
+as an authorization token - fail and check
+token is deleted
+
+Can test any url(s) to confirm, so long
+as they have the correct token type
+configuration
+*/
+describe('TOKEN TYPES', () => {
+	it('Does not allow a single use token to access a general auth route', async () => {
+		await Token.create({
+			identifier: users[0]._id,
+			type: eTokenType.SINGLE_AUTH,
+			docModel: 'User'
+		});
+
+		const { body, status } = await http.get('/users', {
+			headers: { authorization: userToken(users[0]) }
+		});
+
+		expect(status).toBe(401);
+		expect(body.message).toContain('Not authorised');
+	});
+
+	it('Does not allow general auth tokens to be submitted outside of a cookie', async () => {
+		await Token.create({
+			identifier: users[0]._id,
+			type: eTokenType.AUTH,
+			docModel: 'User'
+		});
+
+		const { body, status } = await http.get('/users', {
+			headers: { authorization: userToken(users[0]) }
+		});
+
+		expect(status).toBe(401);
+		expect(body.message).toContain('Not authorised');
 	});
 });
