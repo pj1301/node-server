@@ -8,7 +8,7 @@ To run the server in development, use `npm run dev`.
 
 To run the server in production, use `npm start`.
 
-To run jest tests, use `npm test` for all tests, `npm run test:api` for api tests only or `npm run test:unit` for unit tests only.
+To run jest tests, use `npm test` for all tests, `npm run test:api` for api tests only or `npm run test:unit` for unit tests only. `npm run test:summary` will deactivate the logger, returning a simple report with memory heap information.
 
 ### Environment
 
@@ -19,7 +19,8 @@ Environment variables **must** be provided - place a development.json and a prod
 * PORT
 * JWT_SECRET
 * JWT_EXPIRY
-* ROOT_PATH
+* ROOT_PATH,
+* MAX_COOKIE_AGE
 
 _All of the variables except for MONGO\_URL are required for the test environment file which you will need in order to run Jest API/unit tests._
 
