@@ -29,7 +29,10 @@ async function login(
 
 	res
 		.cookie('token', storedToken.token, {
-			maxAge: parseInt(process.env.MAX_COOKIE_AGE as string, 10),
+			expires: new Date(
+				new Date().getTime() +
+					parseInt(process.env.MAX_COOKIE_AGE as string, 10)
+			),
 			httpOnly: true
 		})
 		.status(200)
